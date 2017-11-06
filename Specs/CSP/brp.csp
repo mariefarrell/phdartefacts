@@ -1,0 +1,5 @@
+channel brp, SND_progress, RCV_progress
+
+S0 = SND_progress -> (brp -> STOP)
+R0 = RCV_progress -> (brp -> STOP)
+P0 = S0 [|{}|] R0

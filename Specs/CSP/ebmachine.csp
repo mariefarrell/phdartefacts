@@ -1,0 +1,22 @@
+--channel for event names
+channel evs : E
+datatype E = init|event1|event2
+
+--channel to hold a list of 2 variables
+channel vlist : {0..2}.{0..2}
+
+--Processes for three events
+
+E1 = vlist?x.x' -> (if x' == x + 1 then (evs!event1 -> (vlist!x!(x + 1) -> STOP)) else (vlist!x!x' -> STOP))
+
+E2 = vlist?x.x' -> (if x'> x  then (evs!event2 -> (vlist!x!(x'+ 1) -> STOP)) else (vlist!x!x' -> STOP))
+
+M = vlist?x?x' -> (if x' == 1 then (evs!init -> (vlist!x!x' -> M1)) else (vlist!x!x' -> STOP))
+
+
+
+
+M1 = vlist?x?x' -> (E1 [| {vlist} |] E2)
+
+M' = vlist?x?x' -> (if x' == 1 then (evs!init -> (vlist!x'!x'-> M1)) else (vlist!x'!x' -> STOP))
+
