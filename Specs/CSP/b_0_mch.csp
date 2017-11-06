@@ -1,0 +1,50 @@
+/*generated using ProB8/
+
+datatype Bstatus= working | success | failure
+
+channel RCV_progress, SND_progress, brp
+
+MAIN =  RCV_progress -> SND_progress -> brp -> STOP 
+
+
+MACHINE b_0
+SETS /* enumerated */
+  STATUS={working,success,failure}
+ABSTRACT_VARIABLES
+  r_st,
+  s_st
+/* PROMOTED OPERATIONS
+  brp,
+  RCV_progress,
+  SND_progress */
+INITIALISATION
+    EVENT INITIALISATION = /* of machine b_0 */
+    THEN 
+         r_st := working
+      ||
+         s_st := working
+    END
+OPERATIONS
+  brp = 
+    EVENT brp = /* of machine b_0 */
+    WHEN 
+        /* @b_0:grd1  */ r_st /= working
+      & /* @b_0:grd2  */ s_st /= working
+    THEN 
+      skip
+    END;
+  
+  RCV_progress = 
+    ANTICIPATED EVENT RCV_progress = /* of machine b_0 */
+    USING VARIANT 0
+    THEN 
+         r_st :: {success,failure}
+    END;
+  
+  SND_progress = 
+    ANTICIPATED EVENT SND_progress = /* of machine b_0 */
+    USING VARIANT 0
+    THEN 
+         s_st :: {success,failure}
+    END
+END
